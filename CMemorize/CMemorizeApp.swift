@@ -10,8 +10,8 @@ import SwiftUI
 @main
 struct CMemorizeApp: App {
     var body: some Scene {
-        DocumentGroup(newDocument: CMemorizeDocument()) { file in
-            ContentView(document: file.$document)
+        WindowGroup {
+            ContentView()
         }
     }
 }
