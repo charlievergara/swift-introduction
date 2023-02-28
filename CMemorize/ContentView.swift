@@ -8,34 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
-    //@Binding var document: CMemorizeDocument
     
-    @State var emojis = ["🏡","🏘️","🏭","🏬","🏣","🏦","🐱","🦇","🪲","🐣"]
-    
-    @State var hearts = ["❤️","🧡","💛","💚","💙","💜","🖤","🤍",]
-    
-    @State var flags = ["🏳️","🏴","🚩","🇧🇷","🇧🇪","🏳️‍🌈","🇦🇶","🇨🇿","🇬🇬"]
-    
-    @State var clothing = ["🦺","👚","👔","👙","🩱","🧥","👖","👘","👗","🥻"]
-    
-    
-    @State var emojiCount = 10
+    @ObservedObject var viewModel: EmojiMemoryGame
 
     var body: some View {
         VStack{
-            HStack{
+            /*HStack{
                 Text("Memorize!")
-            }
+            }*/
             ScrollView{
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
-                    ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
-                        CardView(content: emoji).aspectRatio(2/3, contentMode: .fit)
+                    ForEach(viewModel.cards) { card in
+                        CardView(card: card).aspectRatio(2/3, contentMode: .fit).onTapGesture {
+                            viewModel.choose(card)
+                        }
                     }
                 }
             }
             .foregroundColor(/*@START_MENU_TOKEN@*/.red/*@END_MENU_TOKEN@*/)
-            Spacer()
-            HStack{
+            //Spacer()
+           /* HStack{
                 Button(action: {
                     emojis = flags.shuffled()
                     emojiCount = emojis.count
@@ -83,7 +75,7 @@ struct ContentView: View {
                 
             }
             //.font(.largeTitle)
-            .padding(.horizontal)
+            .padding(.horizontal)*/
             
         }
         .padding(.horizontal)
@@ -92,7 +84,7 @@ struct ContentView: View {
         
     }
     
-    var add:some View{
+    /*var add:some View{
         Button(action: {
             if emojiCount > 1{
                 emojiCount += 1
@@ -112,23 +104,22 @@ struct ContentView: View {
         }, label: {
             Image(systemName: "minus.circle")
         })
-    }
+    }*/
 }
 
 struct CardView: View{
-    var content:String
-    @State var isFaceUp:Bool = true
+    let card:MemoryGame<String>.Card
     
     var body: some View{
         ZStack(content: {
             
             let shape = RoundedRectangle(cornerRadius: 10)
             
-            if isFaceUp{
+            if card.isFaceUp{
                 shape
                     .fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3)
-                Text(content)
+                Text(card.content)
                     .font(.largeTitle)
             }else{
                 shape
@@ -136,16 +127,17 @@ struct CardView: View{
             }
             
         })
-        .onTapGesture {
-            isFaceUp = !isFaceUp
+        /*.onTapGesture {
+            card.isFaceUp = !card.isFaceUp
             
-        }
+        }*/
         
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        let game = EmojiMemoryGame()
+        ContentView(viewModel: game)
     }
 }
