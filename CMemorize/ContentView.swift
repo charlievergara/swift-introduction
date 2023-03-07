@@ -115,12 +115,14 @@ struct CardView: View{
             
             let shape = RoundedRectangle(cornerRadius: 10)
             
-            if card.isFaceUp{
+            if card.isFaceUp {
                 shape
                     .fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3)
                 Text(card.content)
                     .font(.largeTitle)
+            }else if card.isMatched{
+                shape.opacity(0)
             }else{
                 shape
                     .fill()
